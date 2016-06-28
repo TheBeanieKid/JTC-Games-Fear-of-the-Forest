@@ -9,17 +9,12 @@ public class Player : MonoBehaviour
     Vector3 pos;
     Transform tr;
     Animator anim;
-
     public bool currentPosEquals = true;
-
     public bool up = true;
     public bool down = true;
     public bool left = true;
     public bool right = true;
-
     private Vector3 mousePosition;
-    private Vector3 direction;
-    private float distanceFromObject;
 
     void Start()
     {
@@ -40,10 +35,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.D))
         {
+            anim.SetInteger("move", 1);
             transform.Translate(1 * speed * Time.deltaTime, 0, 0);
         }
         if (Input.GetKey(KeyCode.A))
         {
+            anim.SetInteger("move", 1);
             transform.Translate(-1 * speed * Time.deltaTime, 0, 0);
         }
         if (Input.GetKey(KeyCode.W))
@@ -53,7 +50,13 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.S))
         {
+            anim.SetInteger("move", 1);
             transform.Translate(0, -1 * speed * Time.deltaTime, 0);
+        }
+
+        if(!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
+        {
+            anim.SetInteger("move", 0);
         }
     }
 
