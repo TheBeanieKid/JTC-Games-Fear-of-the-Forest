@@ -4,10 +4,11 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 
-    float speed = 4.0f;
+    public float speed = 4.0f;
     public bool move = true;
     Vector3 pos;
     Transform tr;
+    Animator anim;
 
     public bool currentPosEquals = true;
 
@@ -16,72 +17,54 @@ public class Player : MonoBehaviour
     public bool left = true;
     public bool right = true;
 
+    private Vector3 mousePosition;
+    private Vector3 direction;
+    private float distanceFromObject;
+
     void Start()
     {
         pos = transform.position;
         tr = transform;
+        anim = GetComponent<Animator>();
     }
 
     void Update()
     {
+        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z - Camera.main.transform.position.z));
+        GetComponent<Rigidbody2D>().transform.eulerAngles = new Vector3(0, 0, Mathf.Atan2((mousePosition.y - transform.position.y), (mousePosition.x - transform.position.x)) * Mathf.Rad2Deg - 90);
 
-        if (Input.GetKey(KeyCode.D) && tr.position == pos)
+        if (Input.GetKey(KeyCode.Mouse0))
         {
-            if (right == true)
-            {
-                pos += Vector3.right;
-            }
-        }
-        else if (Input.GetKey(KeyCode.A) && tr.position == pos)
-        {
-            if (left == true)
-            {
-                pos += Vector3.left;
-            }
-        }
-        else if (Input.GetKey(KeyCode.W) && tr.position == pos)
-        {
-            if (up == true)
-            {
-                pos += Vector3.up;
-            }
-        }
-        else if (Input.GetKey(KeyCode.S) && tr.position == pos)
-        {
-            if (down == true)
-            {
-                pos += Vector3.down;
-            }
+            
         }
 
-        if (move == true)
+        if (Input.GetKey(KeyCode.D))
         {
-            transform.position = Vector3.MoveTowards(transform.position, pos, Time.deltaTime * speed);
-            move = true;
+            transform.Translate(1 * speed * Time.deltaTime, 0, 0);
         }
-        else
+        if (Input.GetKey(KeyCode.A))
         {
-            transform.position = transform.position;
+            transform.Translate(-1 * speed * Time.deltaTime, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.W))
+        {
+            anim.SetInteger("move", 1);
+            transform.Translate(0, 1 * speed * Time.deltaTime, 0);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.Translate(0, -1 * speed * Time.deltaTime, 0);
         }
     }
 
-    void OnCollisionEnter(Collision coll)
+    void OnCollisionEnter2D(Collision2D coll)
     {
-        //if (coll.gameObject.tag == "Collide")
-        //{
-        //    move = false;
-        //    StartCoroutine(Wait());
-        //}
-
+        //pos = transform.position;
     }
 
-    void OnCollisionStay()
+    void OnCollisionStay2D()
     {
-        //for (int i = 1; i > 0; i++)
-        //{
-        //    StartCoroutine(Wait());
-        //    //move = false;
-        //}
+        //pos = transform.position;
     }
 
     IEnumerator Wait()
